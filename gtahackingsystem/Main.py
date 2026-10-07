@@ -3,6 +3,7 @@ from tkinter import messagebox, ttk
 import random
 import time
 from collections import deque
+import database
 
 class GameState:
     """Global state to track progress across all games."""
@@ -144,11 +145,18 @@ class BaseGame:
             state.integrity -= 1
             self.hub.log("[ERROR] Intrusion detected! Integrity damaged.")
             if state.integrity <= 0:
+                try:
+                    database.reset_progress(state)
+                except Exception:
+                    pass
                 messagebox.showerror("CRITICAL FAILURE", "SYSTEM INTEGRITY ZERO. SESSION TERMINATED.")
                 self.hub.root.quit()
                 return
             messagebox.showerror("System", msg_fail)
-        
+        try:
+            database.save_state(state)
+        except Exception:
+            pass
         self.back_callback()
 
 
@@ -564,5 +572,10 @@ class MetadataWipe(BaseGame):
 
 if __name__ == "__main__":
     root = tk.Tk()
+    try:
+        database.init_db()
+        database.load_state(state)
+    except Exception as e:
+        messagebox.showwarning("Database", f"Progress saving is off:\n{e}")
     app = HackingHub(root)
     root.mainloop()
