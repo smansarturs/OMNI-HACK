@@ -10,3 +10,6 @@ That's how it looks like: <br>
 
 For example, pattern memory game: <br>
 <img width="1000" height="830" alt="image" src="https://github.com/user-attachments/assets/e6c0af45-393e-40c0-9e08-b6b4537a6c52" />
+<br>
+
+Install the game in Releases.
